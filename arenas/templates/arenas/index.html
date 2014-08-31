@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+	{% if arena_list %}
+	    <ul class="list-unstyled">
+	    {% for arena in arena_list %}
+	        <li><a href="/arenas/{{ arena.id }}/">{{ arena.title }}</a></li>
+	    {% endfor %}
+	    </ul>
+	{% else %}
+	    <p>No Arenas are available.</p>
+	{% endif %}
+{% endblock %}

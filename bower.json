@@ -1,0 +1,24 @@
+{
+  "name": "CLeagueHero",
+  "version": "0.0.1",
+  "authors": [
+    "Chester O'Neill <c.oneill.codes@gmail.com>"
+  ],
+  "description": "CLeagueHero package",
+  "moduleType": [
+    "amd"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "static/components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.1"
+  }
+}
