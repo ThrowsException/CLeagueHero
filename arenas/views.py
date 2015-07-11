@@ -5,6 +5,7 @@ from django.views import generic
 
 from arenas.models import Arena
 
+
 class IndexView(generic.ListView):
     template_name = 'arenas/index.html'
     context_object_name = 'arena_list'
@@ -12,6 +13,7 @@ class IndexView(generic.ListView):
     def get_queryset(self):
         """Return the last five published polls."""
         return Arena.objects.order_by('title')
+
 
 class DetailView(generic.DetailView):
     model = Arena

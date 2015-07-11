@@ -2,6 +2,7 @@
 
 {% block content %}
 	{% if arena_list %}
+		<div id="map-canvas"></div>
 	    <ul class="list-unstyled">
 	    {% for arena in arena_list %}
 	        <li><a href="/arenas/{{ arena.id }}/">{{ arena.title }}</a></li>
