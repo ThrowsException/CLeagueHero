@@ -8,6 +8,11 @@ urlpatterns = patterns('',
     # url(r'^$', 'CLeagueHero.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
 
- 	url(r'^arenas/', include('arenas.urls', namespace="arenas")),
+    url(r'^$', 'arenas.views.home'),
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^login/$', 'arenas.views.home'),
+    url(r'^logout/$', 'arenas.views.logout'),
+    url(r'^done/$', 'arenas.views.done', name='done'),
+    url(r'^arenas/', include('arenas.urls', namespace="arenas")),
+    url(r'', include('social.apps.django_app.urls', namespace='social'))
 )
