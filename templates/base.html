@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>My Project</title>
+        <title>C League Hero</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         
         {% load staticfiles %}
+        <script src="{% static "components/jquery/dist/jquery.min.js" %}"></script>
+        <script src="{% static "components/bootstrap/dist/js/bootstrap.min.js" %}"></script>
 		    <link rel="stylesheet" href="{% static "components/bootstrap/dist/css/bootstrap.min.css" %}" type="text/css" media="screen" />
 
         <style type="text/css">
@@ -13,69 +15,31 @@
         <script type="text/javascript"
           src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBAAmu5gYIZrAiwbF2D4PMAu0lDDdw4WVk">
         </script>
-        <script type="text/javascript">
-
-            var map;
-          function initialize() {
-            var mapOptions = {
-              center: { lat: -34.397, lng: 150.644},
-              zoom: 12
-            };
-            map = new google.maps.Map(document.getElementById('map-canvas'),
-                mapOptions);
-            var geocoder = new google.maps.Geocoder();
-          
-
-            var initialLocation;
-            var siberia = new google.maps.LatLng(60, 105);
-            var newyork = new google.maps.LatLng(40.69847032728747, -73.9514422416687);
-            var browserSupportFlag =  new Boolean();
-            // Try W3C Geolocation (Preferred)
-            if(navigator.geolocation) {
-                browserSupportFlag = true;
-                navigator.geolocation.getCurrentPosition(function(position) {
-                  initialLocation = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
-                  map.setCenter(initialLocation);
-                }, function() {
-                  handleNoGeolocation(browserSupportFlag);
-                });
-              }
-              // Browser doesn't support Geolocation
-              else {
-                browserSupportFlag = false;
-                handleNoGeolocation(browserSupportFlag);
-              }
-
-              function handleNoGeolocation(errorFlag) {
-                if (errorFlag == true) {
-                  alert("Geolocation service failed.");
-                  initialLocation = newyork;
-                } else {
-                  alert("Your browser doesn't support geolocation. We've placed you in Siberia.");
-                  initialLocation = siberia;
-                }
-                map.setCenter(initialLocation);
-              }
-
-            geocoder.geocode({ 'address': "1185 York Rd. Warminster, PA 18974" }, function (results, status) {
-                if (status == google.maps.GeocoderStatus.OK) {
-                  pt = results[0].geometry.location;
-                  console.log(pt);
-
-                  var myMarkerOpts = {
-                    position: pt,
-                    map: map
-                  };
-
-                  var marker = new google.maps.Marker(myMarkerOpts);
-                }
-            });
-          }
-          google.maps.event.addDomListener(window, 'load', initialize);
-        </script>
     </head>
 
     <body>
+        <nav class="navbar navbar-default">
+          <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand" href="/arenas/">C League Hero</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+              <ul class="nav navbar-nav">
+                <li><a href="/arenas/">Arenas</a></li>
+                <li><a href="/profile/">Profile</a></li>
+              </ul>
+            </div><!-- /.navbar-collapse -->
+          </div><!-- /.container-fluid -->
+        </nav>
         <div class="container">
         	{% block content %}{% endblock %}
         </div>
