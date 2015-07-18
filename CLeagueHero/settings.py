@@ -91,18 +91,21 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.debug',
     'django.core.context_processors.i18n',
     'django.core.context_processors.media',
+    "django.core.context_processors.request",
     'django.contrib.messages.context_processors.messages',
     'social.apps.django_app.context_processors.backends',
     'social.apps.django_app.context_processors.login_redirect'
 )
 
 AUTHENTICATION_BACKENDS = (
-    'social.backends.facebook.FacebookAppOAuth2',
+    # 'social.backends.facebook.FacebookAppOAuth2',
     'social.backends.facebook.FacebookOAuth2',
 )
 
 AUTH_USER_MODEL = 'arenas.CustomUser'
 
+SOCIAL_AUTH_LOGIN_URL = '/logged/'
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/done/'
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/done/'
 URL_PATH = ''

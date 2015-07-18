@@ -11,6 +11,7 @@ from django.conf import settings
 from social.apps.django_app.utils import psa
 
 from arenas.models import Arena
+from arenas.decorators import render_to
 
 
 class LoginRequiredMixin(object):
@@ -26,24 +27,31 @@ class IndexView(LoginRequiredMixin, generic.ListView):
 
     def get_queryset(self):
         """Return the last five published polls."""
-        return Arena.objects.order_by('title')
+        r = Arena.objects.order_by('title')
+        return r
 
 
-class DetailView(generic.DetailView):
+class DetailView(LoginRequiredMixin, generic.DetailView):
     model = Arena
     template_name = 'arenas/detail.html'
 
 
 def home(request):
+    c = context()
+    if request.GET.get('next'):
+        c = context(next=request.GET['next'])
+
     return render_to_response('arenas/home.html',
-                              context_instance=RequestContext(request, context()))
+                              context_instance=RequestContext(request, c))
 
 
 @login_required
+@render_to('arenas/home.html')
 def done(request):
     """Login complete view, displays user data"""
-    return render_to_response('arenas/home.html',
-                              context_instance=RequestContext(request, context()))
+    # return render_to_response('arenas/home.html',
+                             # context_instance=RequestContext(request, context()))
+    return context()
 
 def logout(request):
     """Logs out user"""

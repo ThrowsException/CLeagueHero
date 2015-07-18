@@ -21,18 +21,16 @@
   </head>
   <body>
 
-    <fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
-    </fb:login-button>
-
     <div id="status">
     </div>
 
-    <h1>Python Social Auth</h1>
+    <h1>C League Hero</h1>
+    <h2>Find your home rink</h2>
 
     <div class="buttons">
       {% if user.is_authenticated %}
         <div class="user-details">
-          You are logged in as <code>{{ user.username }}</code>!
+          You are logged in as <code>{{ user.first_name }} {{user.last_name}}</code>!
         </div>
       {% endif %}
 
@@ -49,7 +47,7 @@
                   </a>
                 </form>
               {% else %}
-                <a class="col-md-2 btn btn-default" name="{{ backend|backend_class }}" href="{% url "social:begin" backend=name %}">
+                <a class="col-md-2 btn btn-default" name="{{ backend|backend_class }}" href="{% url "social:begin" backend=name %}?next={{next}}">
                   <i class="fa fa-{{ name|icon_name }}"></i>
                   {{ backend|backend_name }}
                 </a>
@@ -57,30 +55,6 @@
             {% endfor %}
           </div>
         {% endfor %}
-      </div>
-
-      <div class="legacy">
-        {% for name, backend in available_backends|legacy_backends %}
-          {% associated backend %}
-          {% if association %}
-            <form class="disconnect-form" action="{% url "social:disconnect_individual" backend=association.provider association_id=association.id %}" method="post">{% csrf_token %}
-              <a class="btn btn-danger" name="{{ backend|backend_class }}" href="#">
-                <i class="fa fa-{{ name|icon_name }}"></i>
-                Disconnect {{ backend|backend_name }}
-              </a>
-            </form>
-          {% else %}
-            <a class="btn btn-default" name="{{ backend|backend_class }}" href="{% url "social:begin" backend=name %}">
-              <i class="fa fa-{{ name|icon_name }}"></i>
-              {{ backend|backend_name }}
-            </a>
-          {% endif %}
-        {% endfor %}
-
-        <a class="btn btn-info" name="ajax-login" href="#">
-          <i class="fa fa-refresh"></i>
-          Ajax
-        </a>
       </div>
 
       <div>
@@ -209,52 +183,6 @@
           </div>
         </div>
       </form>
-    </div>
-
-    <div id="ajax-login-modal" class="modal fade">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title">Ajax Authentication by AccessToken</h4>
-          </div>
-
-          <div class="modal-body">
-            <form action="#" method="post" class="form-horizontal" role="form">{% csrf_token %}
-              <div class="form-group">
-                <label class="control-label" for="backend">Backend:</label>
-                <select class="form-control" name="backend">
-                  <option value=""></option>
-                  {% for name, backend in available_backends|oauth_backends %}
-                    <option value="{{ name }}">{{ backend|backend_name }}</option>
-                  {% endfor %}
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label class="control-label" for="access_token">Access token:</label>
-                <input class="form-control" id="access_token" name="access_token" type="text" value="" placeholder="OAuth1 or OAuth2 access token">
-              </div>
-
-              <div class="form-group">
-                <label class="control-label" for="access_token_secret">Access token secret:</label>
-                <input class="form-control" id="access_token_secret" name="access_token_secret" type="text" value="" placeholder="OAuth1 access token secret">
-              </div>
-            </form>
-
-            <div class="login-result" style="display: none;">
-              <p><strong>User Id:</strong><span class="user-id"></span></p>
-              <p><strong>Username:</strong><span class="user-username"></span></p>
-              <p>This page will be reloaded in 10s and the user should be logged in.</p>
-            </div>
-          </div>
-
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Login</button>
-          </div>
-        </div>
-      </div>
     </div>
 
     <div id="persona-modal" class="modal fade">
@@ -391,29 +319,6 @@
         $validationModal = modalDialog('#validation-sent-modal');
         $emailRequired = modalDialog('#email-required-modal');
 
-        modalDialog('#ajax-login-modal', 'ajax-login', function (event) {
-          var $backend, $accessToken, $accessTokenSecret, $fields, $result;
-          event.preventDefault();
-
-          $modal = $(this).closest('.modal');
-          $form = $modal.find('form');
-          $backend = $modal.find('[name="backend"]');
-          $accessToken = $modal.find('[name="access_token"]');
-          $accessTokenSecret = $modal.find('[name="access_token_secret"]');
-          $result = $modal.find('.login-result');
-
-          $.get('/ajax-auth/' + $backend.val() + '/', {
-            access_token: $accessToken.val(),
-            access_token_secret: $accessTokenSecret.val(),
-          }, function (data, xhr, response) {
-            $result.find('.user-id').html(data.id);
-            $result.find('.user-username').html(data.username);
-            $form.hide();
-            $result.show();
-            setTimeout(function () { window.location = '/'; }, 10000);
-          }, 'json')
-        });
-
         modalDialog('#persona-modal', 'persona', function (event) {
           var $form;
           event.preventDefault();
@@ -443,85 +348,5 @@
         {% endif %}
       });
     </script>
-    <script>
-      // This is called with the results from from FB.getLoginStatus().
-      function statusChangeCallback(response) {
-        console.log('statusChangeCallback');
-        console.log(response);
-        // The response object is returned with a status field that lets the
-        // app know the current login status of the person.
-        // Full docs on the response object can be found in the documentation
-        // for FB.getLoginStatus().
-        if (response.status === 'connected') {
-          // Logged into your app and Facebook.
-          testAPI();
-        } else if (response.status === 'not_authorized') {
-          // The person is logged into Facebook, but not your app.
-          document.getElementById('status').innerHTML = 'Please log ' +
-            'into this app.';
-        } else {
-          // The person is not logged into Facebook, so we're not sure if
-          // they are logged into this app or not.
-          document.getElementById('status').innerHTML = 'Please log ' +
-            'into Facebook.';
-        }
-      }
-
-      // This function is called when someone finishes with the Login
-      // Button.  See the onlogin handler attached to it in the sample
-      // code below.
-      function checkLoginState() {
-        FB.getLoginStatus(function(response) {
-          statusChangeCallback(response);
-        });
-      }
-
-      window.fbAsyncInit = function() {
-      FB.init({
-        appId      : '716658848463245',
-        cookie     : true,  // enable cookies to allow the server to access 
-                            // the session
-        xfbml      : true,  // parse social plugins on this page
-        version    : 'v2.2' // use version 2.2
-      });
-
-      // Now that we've initialized the JavaScript SDK, we call 
-      // FB.getLoginStatus().  This function gets the state of the
-      // person visiting this page and can return one of three states to
-      // the callback you provide.  They can be:
-      //
-      // 1. Logged into your app ('connected')
-      // 2. Logged into Facebook, but not your app ('not_authorized')
-      // 3. Not logged into Facebook and can't tell if they are logged into
-      //    your app or not.
-      //
-      // These three cases are handled in the callback function.
-
-      FB.getLoginStatus(function(response) {
-        statusChangeCallback(response);
-      });
-
-      };
-
-      // Load the SDK asynchronously
-      (function(d, s, id) {
-        var js, fjs = d.getElementsByTagName(s)[0];
-        if (d.getElementById(id)) return;
-        js = d.createElement(s); js.id = id;
-        js.src = "//connect.facebook.net/en_US/sdk.js";
-        fjs.parentNode.insertBefore(js, fjs);
-      }(document, 'script', 'facebook-jssdk'));
-
-      // Here we run a very simple test of the Graph API after login is
-      // successful.  See statusChangeCallback() for when this call is made.
-      function testAPI() {
-        console.log('Welcome!  Fetching your information.... ');
-        FB.api('/me', function(response) {
-          console.log('Successful login for: ' + response.name);
-          document.getElementById('status').innerHTML =
-            'Thanks for logging in, ' + response.name + '!';
-        });
-      }
-  </script>
   </body>
 </html>
