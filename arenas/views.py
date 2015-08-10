@@ -2,6 +2,7 @@ from django.shortcuts import get_object_or_404, render_to_response, redirect
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.views import generic
+from django.views.generic import detail
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout as auth_logout, login
 from django.utils.decorators import method_decorator
@@ -12,6 +13,7 @@ from social.apps.django_app.utils import psa
 
 from arenas.models import Arena
 from arenas.decorators import render_to
+from .forms import RatingForm
 
 
 class LoginRequiredMixin(object):
@@ -34,6 +36,26 @@ class IndexView(LoginRequiredMixin, generic.ListView):
 class DetailView(LoginRequiredMixin, generic.DetailView):
     model = Arena
     template_name = 'arenas/detail.html'
+
+    def get_context_data(self, **kwargs):
+        print kwargs
+        context = super(DetailView, self).get_context_data(**kwargs)
+        context['form'] = RatingForm
+        return context
+
+
+class RatingView(LoginRequiredMixin, detail.SingleObjectMixin, generic.FormView):
+    model = Arena
+    template_name = 'arenas/detail.html'
+    form_class = RatingForm
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        return super(RatingView, self).post(request, *args, **kwargs)
+
+    def get_success_url(self):
+        print "great success"
+        return reverse('arenas:detail', kwargs={'pk': self.object.pk})
 
 
 def home(request):
