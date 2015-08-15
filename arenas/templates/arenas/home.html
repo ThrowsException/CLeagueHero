@@ -6,7 +6,7 @@
   <div class="container">
     <div id="status">
     </div>
-    <h1>C League Hero</h1>
+    <h1>Home Ice</h1>
     <h2>Find your home rink</h2>
 
     <div>
@@ -21,14 +21,14 @@
           <div class="row">
             {% for name, backend in sublist %}
               {% associated backend %}
-              {% if association %}
+              <!-- {% if association %}
                 <form class="disconnect-form col-md-2" action="{% url "social:disconnect_individual" backend=association.provider association_id=association.id %}" method="post">{% csrf_token %}
                   <a class="btn btn-danger" name="{{ backend|backend_class }}" href="#">
                     <i class="fa fa-{{ name|icon_name }}"></i>
                     Disconnect {{ backend|backend_name }}
                   </a>
                 </form>
-              {% else %}
+              {% else %} -->
                 <a class="col-md-2 btn btn-default" name="{{ backend|backend_class }}" href="{% url "social:begin" backend=name %}?next={{next}}">
                   <i class="fa fa-{{ name|icon_name }}"></i>
                   {{ backend|backend_name }}
@@ -39,12 +39,12 @@
         {% endfor %}
       </div>
 
-      <div>
+      <!-- <div>
         <a class="btn btn-primary" href="/logout/">
           <i class="fa fa-sign-out"></i>
           Logout
         </a>
-      </div>
+      </div> -->
     </div>
   </div>
 {% endblock %}
