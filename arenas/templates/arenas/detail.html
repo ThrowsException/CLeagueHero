@@ -24,7 +24,13 @@
     <input type="submit" value="Submit" />
 	</form>
 
+	{% for comment in arena.rating_set.all %}
 	<div>
-		{{comments}}
+		{% for name, value in comment.get_fields %}
+	  		
+	    	{{ name }} {{ value }}
+	  			
+		{% endfor %}
 	</div>
+	{% endfor %}
 {% endblock %}

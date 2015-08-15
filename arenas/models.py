@@ -10,7 +10,6 @@ class Arena(models.Model):
     address = models.CharField(max_length=255)
     address_2 = models.CharField(max_length=255)
     phone = models.CharField(max_length=255)
-    ratings = models.ManyToManyField('UserRating')
 
     def __unicode__(self):  # Python 3: def __str__(self):
         return self.title
@@ -29,18 +28,9 @@ class Rating(models.Model):
     lockers = models.IntegerField()
     league = models.IntegerField()
     teams = models.IntegerField()
-
-
-class Comment(models.Model):
     comment = models.TextField()
-    user = models.ManyToManyField(CustomUser, through="UserRating")
-    rating = models.ManyToManyField(Rating, through="UserRating")
-
-    def __unicode__(self):  # Python 3: def __str__(self):
-        return self.comment
-
-
-class UserRating(models.Model):
     user = models.ForeignKey(CustomUser)
-    comment = models.ForeignKey(Comment)
-    rating = models.ForeignKey(Rating)
+    arena = models.ForeignKey(Arena)
+
+    def get_fields(self):
+        return [(field.name, field.value_to_string(self)) for field in Rating._meta.fields]

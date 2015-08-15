@@ -14,6 +14,7 @@ from social.apps.django_app.utils import psa
 from arenas.models import Arena
 from arenas.decorators import render_to
 from .forms import RatingForm
+from .models import Rating
 
 
 class LoginRequiredMixin(object):
@@ -51,6 +52,20 @@ class RatingView(LoginRequiredMixin, detail.SingleObjectMixin, generic.FormView)
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
+        rating = RatingForm(request.POST)
+        print request.POST
+        if rating.is_valid():
+            r = Rating()
+            r.ice_surface = request.POST['ice_surface']
+            r.referees = request.POST['referees']
+            r.lockers = request.POST['lockers']
+            r.league = request.POST['league']
+            r.teams = request.POST['teams']
+            r.comment = request.POST['comment']
+            r.arena = self.object
+            r.user = request.user
+
+            r.save()
         return super(RatingView, self).post(request, *args, **kwargs)
 
     def get_success_url(self):
