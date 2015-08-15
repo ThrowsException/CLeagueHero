@@ -1,1 +1,1 @@
-web: gunicorn hellodjango.wsgi --log-file -
+web: gunicorn CLeagueHero.wsgi --log-file -
