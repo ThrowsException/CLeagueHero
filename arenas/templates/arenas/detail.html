@@ -6,6 +6,9 @@
 	<h1>{{ arena.address_2 }}</h1>
 	<h1>{{ arena.phone }}</h1>
 
+	<a href='/arenas/{{arena.id}}/freeagents/' style="display: block">View Available Players</a>
+	<a href='/arenas/{{arena.id}}/add_player/' style="display: block">I'm Looking For A Team</a>
+
 	{% if form.errors %}
 		{% for field in form %}
 			{% for error in field.errors %}
@@ -20,6 +23,7 @@
 			</div>
 		{% endfor %}
 	{% endif %}
+
 	<form action="/arenas/{{ arena.id }}/rate/" class='form-inline' method="post">
 		{% csrf_token %}
 		{% for field in form  %}

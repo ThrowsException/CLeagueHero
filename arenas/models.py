@@ -31,6 +31,17 @@ class Rating(models.Model):
     comment = models.TextField()
     user = models.ForeignKey(CustomUser)
     arena = models.ForeignKey(Arena)
+    date_created = models.DateTimeField(auto_now_add=True)
 
-    def get_fields(self):
-        return [(field.name, field.value_to_string(self)) for field in Rating._meta.fields]
+
+class FreeAgents(models.Model):
+    player = models.ForeignKey(CustomUser)
+    arena = models.ForeignKey(Arena)
+    date_created = date_created = models.DateTimeField(auto_now_add=True)
+
+
+class Inbox(models.Model):
+    to_user = models.ForeignKey(CustomUser, related_name="to_user")
+    from_user = models.ForeignKey(CustomUser, related_name="from_user")
+    message = models.TextField()
+    date_created = date_created = models.DateTimeField(auto_now_add=True)

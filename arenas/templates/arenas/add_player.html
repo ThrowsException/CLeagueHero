@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+	<p>Adding yourself to the list of players seeking a team will allow teams to contact you</p>
+	<form action="/arenas/{{arena.id}}/add_player/" method="POST">
+		{% csrf_token %}
+		<button type="submit" class="btn btn-default">Yes, I'm looking for a Team</button>
+	</form> 
+	<a href="/arenas/{{arena.id}}" class="btn btn-default">No, I've Changed my Mind</a>
+{% endblock %}

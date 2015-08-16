@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<h1>Free Agents</h1>
+	{% for player in players %}
+		<h2>{{player.player.get_full_name}}</h2>
+	{% endfor %}
+
+{% endblock %}

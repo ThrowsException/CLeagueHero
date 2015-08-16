@@ -14,7 +14,7 @@ from social.apps.django_app.utils import psa
 from arenas.models import Arena
 from arenas.decorators import render_to
 from .forms import RatingForm
-from .models import Rating
+from .models import Rating, FreeAgents
 
 
 class LoginRequiredMixin(object):
@@ -80,6 +80,38 @@ def home(request):
 
     return render_to_response('arenas/home.html',
                               context_instance=RequestContext(request, c))
+
+
+@login_required
+def add_player(request, pk):
+    c = context()
+    if request.method == "GET":
+        c['arena'] = Arena.objects.get(pk=pk)
+        return render_to_response('arenas/add_player.html',
+                              context_instance=RequestContext(request, c))
+    else:
+        f = FreeAgents()
+        f.player = request.user
+        f.arena = Arena.objects.get(pk=pk)
+        f.save()
+
+        return redirect(reverse('arenas:detail', kwargs={'pk': pk}))
+
+
+@login_required
+def freeagents(request, pk):
+    c = context()
+    if request.method == "GET":
+        c['players'] = FreeAgents.objects.filter(arena__pk=pk)
+        return render_to_response('arenas/freeagents.html',
+                              context_instance=RequestContext(request, c))
+    else:
+        f = FreeAgents()
+        f.player = request.user
+        f.arena = Arena.objects.get(pk=pk)
+        f.save()
+
+        return redirect(reverse('arenas:detail', kwargs={'pk': pk}))
 
 
 @login_required
