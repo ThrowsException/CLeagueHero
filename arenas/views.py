@@ -122,21 +122,22 @@ def freeagents(request, pk):
 
         return redirect(reverse('arenas:detail', kwargs={'pk': pk}))
 
+
 @login_required
 def search(request):
-    # c = context()
-    # if request.method == "GET":
-    #     c['arena'] = Arena.objects.get(pk=pk)
-    #     return render_to_response('arenas/add_player.html',
-    #                           context_instance=RequestContext(request, c))
-    # else:
-        # zipcode = request.zip
-        # radius = request.radius
-    pnt = Point(-88.321636, 42.222621, srid=4326)
-    geom = GEOSGeometry('POINT(-87.321636 42.222621)', srid=4326)
-    arena_list = Arena.objects.filter(coords__distance_lte=(geom, D(mi=52)))
-    print(arena_list.query)
-    return render(request, 'arenas/index.html', {'arena_list': arena_list})
+    c = context()
+    c['searchform'] = SearchForm
+    data = request.POST
+
+    pnt = 'POINT(%s %s)' % (data["lng"], data["lat"])
+    print(pnt)
+    geom = GEOSGeometry(pnt, srid=4326)
+
+    arena_list = Arena.objects.filter(coords__distance_lte=(geom, D(mi=data["within"])))
+    c['arena_list'] = arena_list
+
+    return render_to_response('arenas/index.html',
+                              context_instance=RequestContext(request, c))
 
 
 @login_required

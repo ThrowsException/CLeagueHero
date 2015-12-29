@@ -22,4 +22,14 @@ class RatingForm(forms.Form):
 
 
 class SearchForm(forms.Form):
-    zip = forms.CharField()
+    zip = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+
+    within = forms.ChoiceField(widget=Select(attrs={'class': 'form-control'}),
+                               choices=(
+                                         (5, '5 miles'),
+                                         (10, '10 miles'),
+                                         (25, '25 miles'),
+                                         (100, '100 miles')
+                                        ))
+    lng = forms.CharField(widget=forms.HiddenInput())
+    lat = forms.CharField(widget=forms.HiddenInput())
