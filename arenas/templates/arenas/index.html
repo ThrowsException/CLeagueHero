@@ -1,14 +1,48 @@
 {% extends "base.html" %}
 
 {% block content %}
-	{% if arena_list %}
-		<!-- <div id="map-canvas"></div> -->
-	    <ul class="list-unstyled">
-	    {% for arena in arena_list %}
-	        <li><a href="/arenas/{{ arena.id }}/">{{ arena.title }}</a></li>
-	    {% endfor %}
-	    </ul>
-	{% else %}
-	    <p>No Arenas are available.</p>
-	{% endif %}
+  <form action="/arenas/search/" id="searchForm" class='form-inline' method="post">
+    {% csrf_token %}
+    {% for field in searchform.visible_fields  %}    
+      <div class="form-group">
+        {{field.errors}}
+          <label for="{{field.id_for_label}}">{{ field.label_tag }}</label>
+        {{ field }}
+      </div>
+    {% endfor %}
+    {% for field in searchform.hidden_fields %}
+      <div style="display:none;">{{ field }}</div>
+    {% endfor %}
+  </form>
+  <button id="sub" class="btn btn-default">Submit</button>
+  {% if arena_list %}
+    <!-- <div id="map-canvas"></div> -->
+      <ul class="list-unstyled">
+      {% for arena in arena_list %}
+          <li><a href="/arenas/{{ arena.id }}/">{{ arena.title }}</a></li>
+      {% endfor %}
+      </ul>
+  {% else %}
+      <p>No Arenas are available.</p>
+  {% endif %}
+  
+  <script type="text/javascript">
+
+  document.getElementById("sub").addEventListener("click", geocodeAddress, false);
+
+    function geocodeAddress() {
+      var geocoder = new google.maps.Geocoder();
+      var address = document.getElementById('id_zip').value;
+      geocoder.geocode({'address': address}, function(results, status) {
+        if (status === google.maps.GeocoderStatus.OK) {
+          document.getElementById('id_lat').value=results[0].geometry.location.lat()
+          document.getElementById('id_lng').value=results[0].geometry.location.lng()
+          document.getElementById("searchForm").submit();
+        } else {
+          alert('Geocode was not successful for the following reason: ' + status);
+        }
+      });
+    }
+  </script>
+
 {% endblock %}

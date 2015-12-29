@@ -10,10 +10,14 @@ from django.template import RequestContext, loader
 from social.backends.utils import load_backends
 from django.conf import settings
 from social.apps.django_app.utils import psa
+from django.contrib.gis.geos import Point
+from django.contrib.gis.measure import Distance, D
+from django.contrib.gis.geos import GEOSGeometry
+from django.shortcuts import render
 
 from arenas.models import Arena
 from arenas.decorators import render_to
-from .forms import RatingForm
+from .forms import RatingForm, SearchForm
 from .models import Rating, FreeAgents
 
 
@@ -27,6 +31,11 @@ class LoginRequiredMixin(object):
 class IndexView(LoginRequiredMixin, generic.ListView):
     template_name = 'arenas/index.html'
     context_object_name = 'arena_list'
+
+    def get_context_data(self, **kwargs):
+        context = super(IndexView, self).get_context_data(**kwargs)
+        context['searchform'] = SearchForm
+        return context
 
     def get_queryset(self):
         """Return the last five published polls."""
@@ -112,6 +121,23 @@ def freeagents(request, pk):
         f.save()
 
         return redirect(reverse('arenas:detail', kwargs={'pk': pk}))
+
+
+@login_required
+def search(request):
+    c = context()
+    c['searchform'] = SearchForm
+    data = request.POST
+
+    pnt = 'POINT(%s %s)' % (data["lng"], data["lat"])
+    print(pnt)
+    geom = GEOSGeometry(pnt, srid=4326)
+
+    arena_list = Arena.objects.filter(coords__distance_lte=(geom, D(mi=data["within"])))
+    c['arena_list'] = arena_list
+
+    return render_to_response('arenas/index.html',
+                              context_instance=RequestContext(request, c))
 
 
 @login_required

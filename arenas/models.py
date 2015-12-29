@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.gis.db import models
 from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
@@ -10,6 +11,7 @@ class Arena(models.Model):
     address = models.CharField(max_length=255)
     address_2 = models.CharField(max_length=255)
     phone = models.CharField(max_length=255)
+    coords = models.PointField(null=True, blank=True)
 
     def __unicode__(self):  # Python 3: def __str__(self):
         return self.title

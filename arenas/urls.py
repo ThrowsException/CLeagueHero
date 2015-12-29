@@ -9,4 +9,5 @@ urlpatterns = patterns('',
                        url(r'^(?P<pk>\d+)/rate/$', views.RatingView.as_view(), name='rate'),
                        url(r'^(?P<pk>\d+)/add_player/$', 'arenas.views.add_player', name='add_player'),
                        url(r'^(?P<pk>\d+)/freeagents/$', 'arenas.views.freeagents', name='freeagents'),
+                       url(r'^search/$', 'arenas.views.search', name='search')
                        )
