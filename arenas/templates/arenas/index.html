@@ -2,6 +2,22 @@
 
 {% block content %}
 	{% if arena_list %}
+
+		<form action="/arenas/search/" class='form-inline' method="post">
+		{% csrf_token %}
+		{% for field in searchform  %}
+			
+			<div class="form-group">
+				{{field.errors}}
+				<label for="{{field.id_for_label}}">{{ field.label_tag }}</label>
+				{{ field }}
+			</div>
+			
+		{% endfor %}
+		<button type="submit" class="btn btn-default">Submit</button>
+		</form>
+
+
 		<!-- <div id="map-canvas"></div> -->
 	    <ul class="list-unstyled">
 	    {% for arena in arena_list %}

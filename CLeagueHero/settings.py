@@ -36,6 +36,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.gis',
     'social.apps.django_app.default',
     'arenas'
 )
@@ -69,7 +70,8 @@ DATABASES = {
     # }
     'default': {
         # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        # 'ENGINE': 'django.db.backends.postgresql_psycopg2',
         # Or path to database file if using sqlite3.
         'NAME': 'CLeagueHero',
         # The following settings are not used with sqlite3:
@@ -121,8 +123,13 @@ SOCIAL_AUTH_EMAIL_VALIDATION_URL = '/email-sent/'
 SOCIAL_AUTH_USERNAME_FORM_HTML = 'username_signup.html'
 
 # Facebook Auth
-SOCIAL_AUTH_FACEBOOK_KEY = '716658848463245'
-SOCIAL_AUTH_FACEBOOK_SECRET = '65516a62ef936d3d78aec628ae85cc98'
+#SOCIAL_AUTH_FACEBOOK_KEY = '716658848463245'
+#SOCIAL_AUTH_FACEBOOK_SECRET = '65516a62ef936d3d78aec628ae85cc98'
+
+
+# Facebook Auth Dev
+SOCIAL_AUTH_FACEBOOK_KEY = '732845866844543'
+SOCIAL_AUTH_FACEBOOK_SECRET = '292242ebf39c71f93790c2c809e304a2'
 
 # in case we need more permissions
 SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
