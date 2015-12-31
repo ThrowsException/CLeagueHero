@@ -133,7 +133,7 @@ def search(request):
     print(pnt)
     geom = GEOSGeometry(pnt, srid=4326)
 
-    arena_list = Arena.objects.filter(coords__distance_lte=(geom, D(mi=data["within"])))
+    arena_list = Arena.objects.filter(coords__distance_lte=(geom, D(mi=data["within"]))).order_by('title')
     c['arena_list'] = arena_list
 
     return render_to_response('arenas/index.html',
