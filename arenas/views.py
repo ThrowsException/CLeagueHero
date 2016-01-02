@@ -40,10 +40,6 @@ class IndexView(LoginRequiredMixin, generic.ListView):
     def get_queryset(self):
         """Return the last five published polls."""
         r = Arena.objects.order_by('title')
-        for arena in r:
-            if arena.coords:
-                print arena.coords.x
-                print arena.coords.y
         return r
 
 
@@ -156,10 +152,12 @@ def done(request):
                              # context_instance=RequestContext(request, context()))
     return context()
 
+
 def logout(request):
     """Logs out user"""
     auth_logout(request)
     return redirect('/')
+
 
 def context(**extra):
     return dict({

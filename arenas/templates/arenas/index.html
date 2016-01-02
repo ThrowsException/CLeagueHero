@@ -13,8 +13,8 @@
     {% for field in searchform.hidden_fields %}
       <div style="display:none;">{{ field }}</div>
     {% endfor %}
+    <button type="submit" id="sub" class="btn btn-default">Submit</button>
   </form>
-  <button id="sub" class="btn btn-default">Submit</button>
   {% if arena_list %}
     <!-- <div id="map-canvas"></div> -->
       <ul class="list-unstyled">
@@ -28,8 +28,12 @@
   
   <script type="text/javascript">
 
-  document.getElementById("sub").addEventListener("click", geocodeAddress, false);
-
+    document.getElementById("searchForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      geocodeAddress();
+      return false;
+    }, false);
+    
     function geocodeAddress() {
       var geocoder = new google.maps.Geocoder();
       var address = document.getElementById('id_zip').value;
