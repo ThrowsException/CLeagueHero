@@ -40,6 +40,10 @@ class IndexView(LoginRequiredMixin, generic.ListView):
     def get_queryset(self):
         """Return the last five published polls."""
         r = Arena.objects.order_by('title')
+        for arena in r:
+            if arena.coords:
+                print arena.coords.x
+                print arena.coords.y
         return r
 
 
@@ -134,6 +138,10 @@ def search(request):
     geom = GEOSGeometry(pnt, srid=4326)
 
     arena_list = Arena.objects.filter(coords__distance_lte=(geom, D(mi=data["within"]))).order_by('title')
+
+    for arena in arena_list:
+        print arena.coords
+
     c['arena_list'] = arena_list
 
     return render_to_response('arenas/index.html',

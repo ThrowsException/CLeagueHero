@@ -1,7 +1,7 @@
-from django.db import models
+#from django.db import models
 from django.contrib.gis.db import models
 from django.contrib.auth.models import AbstractUser
-
+from django.contrib.gis.geos import GEOSGeometry
 # Create your models here.
 
 
@@ -18,6 +18,16 @@ class Arena(models.Model):
 
     class Meta:
         db_table = 'arenas'
+
+    @property
+    def lat(self):
+        if self.coords:
+            return self.coords.y
+
+    @property
+    def lng(self):
+        if self.coords:
+            return self.coords.x
 
 
 class CustomUser(AbstractUser):

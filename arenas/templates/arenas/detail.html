@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
+
+	<style type="text/css">
+      #map { height: 500px; }
+    </style>
+
 	<h1>{{ arena.title }}</h1>
 	<h1>{{ arena.title2 }}</h1>
 	<h1>{{ arena.address }}</h1>
@@ -8,6 +13,8 @@
 
 	<a href='/arenas/{{arena.id}}/freeagents/' style="display: block">View Available Players</a>
 	<a href='/arenas/{{arena.id}}/add_player/' style="display: block">I'm Looking For A Team</a>
+	
+	<div style="height: 300px, width: 600px" id="map"></div>
 
 	{% if form.errors %}
 		{% for field in form %}
@@ -23,6 +30,7 @@
 			</div>
 		{% endfor %}
 	{% endif %}
+
 
 	<form action="/arenas/{{ arena.id }}/rate/" class='form-inline' method="post">
 		{% csrf_token %}
@@ -64,4 +72,25 @@
 		</div>
 		{% endfor %}
 	</div>
+
+	<script>
+
+	function initMap() {
+	  var myLatLng = {lat: {{arena.lat}}, lng: {{arena.lng}} };
+
+	  var map = new google.maps.Map(document.getElementById('map'), {
+	    zoom: 16,
+	    center: myLatLng
+	  });
+
+	  var marker = new google.maps.Marker({
+	    position: myLatLng,
+	    map: map,
+	    title: 'Hello World!'
+	  });
+	}
+
+    </script>
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBAAmu5gYIZrAiwbF2D4PMAu0lDDdw4WVk&callback=initMap"></script>
 {% endblock %}
