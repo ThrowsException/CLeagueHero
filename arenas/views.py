@@ -1,17 +1,13 @@
-from django.shortcuts import get_object_or_404, render_to_response, redirect
-from django.http import HttpResponseRedirect
+from django.shortcuts import redirect
 from django.core.urlresolvers import reverse
 from django.views import generic
 from django.views.generic import detail
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import logout as auth_logout, login
-from django.utils.decorators import method_decorator
-from django.template import RequestContext, loader
+from django.contrib.auth import logout as auth_logout
+from django.template import RequestContext
 from social.backends.utils import load_backends
 from django.conf import settings
-from social.apps.django_app.utils import psa
-from django.contrib.gis.geos import Point
-from django.contrib.gis.measure import Distance, D
+from django.contrib.gis.measure import D
 from django.contrib.gis.geos import GEOSGeometry
 from django.shortcuts import render
 
@@ -87,7 +83,7 @@ def home(request):
     if request.GET.get('next'):
         c = context(next=request.GET['next'])
 
-    return render_to_response('arenas/home.html',
+    return render(request, 'arenas/home.html',
                               context_instance=RequestContext(request, c))
 
 
@@ -96,7 +92,7 @@ def add_player(request, pk):
     c = context()
     if request.method == "GET":
         c['arena'] = Arena.objects.get(pk=pk)
-        return render_to_response('arenas/add_player.html',
+        return render(request, 'arenas/add_player.html',
                               context_instance=RequestContext(request, c))
     else:
         f = FreeAgents()
@@ -112,7 +108,7 @@ def freeagents(request, pk):
     c = context()
     if request.method == "GET":
         c['players'] = FreeAgents.objects.filter(arena__pk=pk)
-        return render_to_response('arenas/freeagents.html',
+        return render(request, 'arenas/freeagents.html',
                               context_instance=RequestContext(request, c))
     else:
         f = FreeAgents()
@@ -130,17 +126,13 @@ def search(request):
     data = request.POST
 
     pnt = 'POINT(%s %s)' % (data["lng"], data["lat"])
-    print(pnt)
     geom = GEOSGeometry(pnt, srid=4326)
 
     arena_list = Arena.objects.filter(coords__distance_lte=(geom, D(mi=data["within"]))).order_by('title')
 
-    for arena in arena_list:
-        print arena.coords
-
     c['arena_list'] = arena_list
 
-    return render_to_response('arenas/index.html',
+    return render(request, 'arenas/index.html',
                               context_instance=RequestContext(request, c))
 
 
