@@ -10,5 +10,6 @@ urlpatterns = patterns('',
     url(r'^logout/$', 'arenas.views.logout'),
     url(r'^done/$', 'arenas.views.done', name='done'),
     url(r'^arenas/', include('arenas.urls', namespace="arenas")),
+    url(r'^players/', include('players.urls', namespace="players")),
     url(r'', include('social.apps.django_app.urls', namespace='social'))
 )

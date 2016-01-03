@@ -38,7 +38,8 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.gis',
     'social.apps.django_app.default',
-    'arenas'
+    'arenas',
+    'players'
 )
 
 TEMPLATE_LOADERS = (

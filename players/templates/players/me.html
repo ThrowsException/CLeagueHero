@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<h1>My Profile</h1>
+	<ul>
+	<li>First Name: {{user.first_name}}</li>
+	<li>Last Name: {{user.last_name}}</li>
+
+	<form class='form-inline'>
+		{% csrf_token %}
+		{% for field in PlayerForm  %}
+
+			<div class="form-group">
+				{{field.errors}}
+				<label for="{{field.id_for_label}}">{{ field.label_tag }}</label>
+				{{ field }}
+				<!-- <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Email"> -->
+			</div>
+
+		{% endfor %}
+	</form>
+</ul>
+
+
+{% endblock %}

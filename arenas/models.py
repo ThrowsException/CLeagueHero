@@ -2,6 +2,7 @@
 from django.contrib.gis.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.gis.geos import GEOSGeometry
+from players import models as PlayerModels
 # Create your models here.
 
 
@@ -31,7 +32,7 @@ class Arena(models.Model):
 
 
 class CustomUser(AbstractUser):
-    pass
+    positions = models.ManyToManyField(PlayerModels.Positions)
 
 
 class Rating(models.Model):
