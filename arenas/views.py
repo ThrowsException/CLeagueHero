@@ -98,7 +98,10 @@ def add_player(request, pk):
         f = FreeAgents()
         f.player = request.user
         f.arena = Arena.objects.get(pk=pk)
-        f.save()
+        try:
+            f.save()
+        except:
+            return redirect(reverse('arenas:detail', kwargs={'pk': pk}))
 
         return redirect(reverse('arenas:detail', kwargs={'pk': pk}))
 

@@ -52,6 +52,9 @@ class FreeAgents(models.Model):
     arena = models.ForeignKey(Arena)
     date_created = date_created = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        unique_together = ('player', 'arena')
+
 
 class Inbox(models.Model):
     to_user = models.ForeignKey(CustomUser, related_name="to_user")
